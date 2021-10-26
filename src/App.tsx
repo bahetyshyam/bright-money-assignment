@@ -1,24 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { Layout } from "antd";
+import MainContent from "./components/MainContent";
+
+const { Header, Content, Footer } = Layout;
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Layout className="layout">
+        <Header>
+          <div style={{ color: "white" }}>Bright Money Bill Manager</div>
+        </Header>
+        <Content style={{ padding: "50px" }}>
+          <div className="site-layout-content">
+            <MainContent />
+          </div>
+        </Content>
+        <Footer style={{ textAlign: "center" }}>by Shyam Bahety</Footer>
+      </Layout>
     </div>
   );
 }
