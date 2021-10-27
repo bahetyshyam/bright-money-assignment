@@ -1,3 +1,6 @@
 export const BillsTypes = {
   APPEND_BILLS: "APPEND_BILLS",
+  ADD_NEW_BILL: "ADD_NEW_BILL",
+  EDIT_BILL: "EDIT_BILL",
+  DELETE_BILL: "DELETE_BILL",
 };

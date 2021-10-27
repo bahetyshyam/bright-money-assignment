@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { appendBills } from "../../redux/bills/bills.actions";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { mockGetAllBills } from "../../services";
+import BillsTable from "../BillsTable";
 
 const MainContent = () => {
   const reduxDispatch = useAppDispatch();
@@ -15,7 +16,11 @@ const MainContent = () => {
   }, [reduxDispatch]);
   const state = useAppSelector((state) => state.billsReducer);
   console.log(state);
-  return <div>Main COntent</div>;
+  return (
+    <div style={{ width: "100%" }}>
+      <BillsTable />
+    </div>
+  );
 };
 
 export default MainContent;

@@ -7,6 +7,6 @@ interface Bill {
   id: string | number;
   description: string;
   category: string;
-  amount: Number;
+  amount: number;
   date: string | Date;
 }
