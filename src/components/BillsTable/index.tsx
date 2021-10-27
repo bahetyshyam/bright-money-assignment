@@ -1,4 +1,4 @@
-import { Table, Space, Button } from "antd";
+import { Table, Space, Button, Checkbox } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import { deleteBill } from "../../redux/bills/bills.actions";
@@ -19,6 +19,7 @@ const BillsTable = () => {
   const [currentActionType, setCurrentActionType] = useState<
     ModalActionType | undefined
   >(undefined);
+  const [filterList, setFilterList] = useState<string[]>([]);
   const reduxDispatch = useAppDispatch();
 
   const handleAdd = () => {
@@ -70,14 +71,42 @@ const BillsTable = () => {
       ),
     },
   ];
+
+  const onChangeCheckBox = (filterList: any) => {
+    setFilterList(filterList);
+  };
+
+  const filteredTableData =
+    filterList.length === 0
+      ? billsData
+      : billsData.filter((billItem) => filterList.includes(billItem.category));
+  console.log(filteredTableData);
   return (
     <>
       <Button onClick={handleAdd} style={{ marginBottom: 10 }} type="primary">
         Add New Bill
       </Button>
+      <Checkbox.Group
+        style={{ width: "100%" }}
+        onChange={onChangeCheckBox}
+        value={filterList}
+      >
+        <Checkbox value="utility">utility</Checkbox>
+        <br />
+        <Checkbox value="shopping">shopping</Checkbox>
+        <br />
+        <Checkbox value="Food & Dining">Food & Dining</Checkbox>
+        <br />
+        <Checkbox value="education">education</Checkbox>
+        <br />
+        <Checkbox value="Personal Care">Personal Care</Checkbox>
+        <br />
+        <Checkbox value="Travel">Travel</Checkbox>
+        <br />
+      </Checkbox.Group>
       <Table
         columns={columns}
-        dataSource={billsData}
+        dataSource={filteredTableData}
         pagination={false}
         rowClassName="row-class"
         summary={(pageData) => {
