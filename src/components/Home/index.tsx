@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { appendBills } from "../../redux/bills/bills.actions";
-import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch } from "../../redux/hooks";
 import { mockGetAllBills } from "../../services";
 import BillsTable from "../BillsTable";
 import TimeSeriesChart from "../TimeSeriesChart";
 
-const MainContent = () => {
+const Home = () => {
   const reduxDispatch = useAppDispatch();
 
   useEffect(() => {
@@ -15,8 +15,6 @@ const MainContent = () => {
     };
     fetchAllBills();
   }, [reduxDispatch]);
-  const state = useAppSelector((state) => state.billsReducer);
-  console.log("Root state", state);
   return (
     <div style={{ width: "100%" }}>
       <BillsTable />
@@ -25,4 +23,4 @@ const MainContent = () => {
   );
 };
 
-export default MainContent;
+export default Home;
