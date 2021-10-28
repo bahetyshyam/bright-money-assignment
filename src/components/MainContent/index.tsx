@@ -3,6 +3,7 @@ import { appendBills } from "../../redux/bills/bills.actions";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { mockGetAllBills } from "../../services";
 import BillsTable from "../BillsTable";
+import TimeSeriesChart from "../TimeSeriesChart";
 
 const MainContent = () => {
   const reduxDispatch = useAppDispatch();
@@ -15,10 +16,11 @@ const MainContent = () => {
     fetchAllBills();
   }, [reduxDispatch]);
   const state = useAppSelector((state) => state.billsReducer);
-  console.log(state);
+  console.log("Root state", state);
   return (
     <div style={{ width: "100%" }}>
       <BillsTable />
+      <TimeSeriesChart />
     </div>
   );
 };

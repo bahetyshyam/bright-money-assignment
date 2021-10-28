@@ -19,3 +19,11 @@ code {
   padding: 24px;
   background: #fff;
 }
+
+.dark-grey {
+  background-color: lightgray;
+}
+
+.dark-grey :hover {
+  background-color: lightgray;
+}

@@ -1,4 +1,4 @@
-const mockData: Bill[] = [
+export const mockBills: Bill[] = [
   {
     id: 1,
     description: "Dominoes",
@@ -9,14 +9,14 @@ const mockData: Bill[] = [
   {
     id: 2,
     description: "Car wash",
-    category: "utility",
+    category: "Utility",
     amount: 500,
     date: "01-06-2020",
   },
   {
     id: 3,
     description: "Amazon",
-    category: "shopping",
+    category: "Shopping",
     amount: 2030,
     date: "01-07-2020",
   },
@@ -30,7 +30,7 @@ const mockData: Bill[] = [
   {
     id: 5,
     description: "Tuition",
-    category: "education",
+    category: "Education",
     amount: 2200,
     date: "01-12-2020",
   },
@@ -50,4 +50,12 @@ const mockData: Bill[] = [
   },
 ];
 
-export default mockData;
+export const mockCategories: string[] = [
+  "FoodNDining",
+  "Utility",
+  "Shopping",
+  "Food & Dining",
+  "Education",
+  "Personal Care",
+  "Travel",
+];

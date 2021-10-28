@@ -1,8 +1,8 @@
 import { BillsTypes } from "./bills.constants";
 
 const INITIAL_STATE: BillsState = {
-  bills: [],
-  categories: [],
+  activeBills: [],
+  billsToPay: [],
 };
 
 export const billsReducer = (state = INITIAL_STATE, action: any) => {
@@ -10,32 +10,56 @@ export const billsReducer = (state = INITIAL_STATE, action: any) => {
     case BillsTypes.APPEND_BILLS:
       return {
         ...state,
-        bills: [...state.bills, ...action.data],
+        activeBills: [...state.activeBills, ...action.data],
       };
     case BillsTypes.ADD_NEW_BILL:
       return {
         ...state,
-        bills: [...state.bills, action.data],
+        activeBills: [...state.activeBills, action.data],
       };
     case BillsTypes.EDIT_BILL:
-      const editedArray = state.bills.map((item) => {
+      const editedArray = state.activeBills.map((item) => {
         if (item.id === action.data.id) {
           return action.data;
         } else return item;
       });
       return {
         ...state,
-        bills: editedArray,
+        activeBills: editedArray,
       };
     case BillsTypes.DELETE_BILL:
-      console.log("Hitting here");
-      const filteredArray = state.bills.filter(
+      const filteredArray = state.activeBills.filter(
         (item) => item.id !== action.data.billId
       );
       return {
         ...state,
-        bills: filteredArray,
+        activeBills: filteredArray,
       };
+    case BillsTypes.BUDGET_UPDATED:
+      if (action.data.budget === 0) {
+        return {
+          ...state,
+          billsToPay: [],
+        };
+      } else {
+        const sortedActiveBills = state.activeBills.sort(
+          (a, b) => b.amount - a.amount
+        );
+        let budgetUsed = 0;
+        let tempBillsToPay: Bill[] = [];
+        sortedActiveBills.forEach((billItem) => {
+          if (billItem.amount + budgetUsed > action.data.budget) {
+            //do nothing
+          } else {
+            budgetUsed = budgetUsed + billItem.amount;
+            tempBillsToPay.push(billItem);
+          }
+        });
+        return {
+          ...state,
+          billsToPay: tempBillsToPay,
+        };
+      }
     default:
       return state;
   }

@@ -1,10 +1,10 @@
-import mockData from "../mockData";
+import { mockBills } from "../mockData";
 
 export const mockGetAllBills = () => {
   return new Promise<{ data: Bill[] }>((resolve, reject) => {
     setTimeout(() => {
       resolve({
-        data: mockData,
+        data: mockBills,
       });
     }, 1000);
   });

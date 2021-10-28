@@ -1,9 +1,10 @@
-import { Table, Space, Button, Checkbox } from "antd";
+import { Table, Space, Button, Select, Input } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
-import { deleteBill } from "../../redux/bills/bills.actions";
+import { budgetUpdated, deleteBill } from "../../redux/bills/bills.actions";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import AddEditBillModal from "../AddEditBillModal";
+const { Option } = Select;
 
 export enum ModalActionType {
   Add,
@@ -11,7 +12,7 @@ export enum ModalActionType {
 }
 
 const BillsTable = () => {
-  const billsData = useAppSelector((state) => state.billsReducer.bills);
+  const billsData = useAppSelector((state) => state.billsReducer.activeBills);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [currentActionBillData, setCurrentActionBillData] = useState<
     Bill | undefined
@@ -21,6 +22,8 @@ const BillsTable = () => {
   >(undefined);
   const [filterList, setFilterList] = useState<string[]>([]);
   const reduxDispatch = useAppDispatch();
+  const categories = useAppSelector((state) => state.categoriesReducer);
+  const billsToPay = useAppSelector((state) => state.billsReducer.billsToPay);
 
   const handleAdd = () => {
     showModal();
@@ -65,67 +68,90 @@ const BillsTable = () => {
       key: "action",
       render: (text, record) => (
         <Space size="middle">
-          <a onClick={() => handleEdit(record)}>Edit</a>
-          <a onClick={() => handleDelete(record.id)}>Delete</a>
+          <Button onClick={() => handleEdit(record)}>Edit</Button>
+          <Button danger onClick={() => handleDelete(record.id)}>
+            Delete
+          </Button>
         </Space>
       ),
     },
   ];
 
-  const onChangeCheckBox = (filterList: any) => {
+  const onChangeFilterSelect = (filterList: any) => {
     setFilterList(filterList);
+  };
+  const onBudgetChange = (
+    ev: React.ChangeEvent<HTMLInputElement> | undefined
+  ) => {
+    if (ev) {
+      let budget = 0;
+      if (ev.target.value !== "") {
+        budget = parseInt(ev.target.value);
+      }
+      reduxDispatch(budgetUpdated(budget));
+    }
   };
 
   const filteredTableData =
     filterList.length === 0
       ? billsData
       : billsData.filter((billItem) => filterList.includes(billItem.category));
-  console.log(filteredTableData);
   return (
     <>
       <Button onClick={handleAdd} style={{ marginBottom: 10 }} type="primary">
         Add New Bill
       </Button>
-      <Checkbox.Group
+      <br></br>
+      <div>Filter</div>
+      <Select
+        mode="multiple"
+        allowClear
         style={{ width: "100%" }}
-        onChange={onChangeCheckBox}
+        placeholder="Please select"
+        defaultValue={[]}
         value={filterList}
+        onChange={onChangeFilterSelect}
       >
-        <Checkbox value="utility">utility</Checkbox>
-        <br />
-        <Checkbox value="shopping">shopping</Checkbox>
-        <br />
-        <Checkbox value="Food & Dining">Food & Dining</Checkbox>
-        <br />
-        <Checkbox value="education">education</Checkbox>
-        <br />
-        <Checkbox value="Personal Care">Personal Care</Checkbox>
-        <br />
-        <Checkbox value="Travel">Travel</Checkbox>
-        <br />
-      </Checkbox.Group>
+        {categories.map((caetgoryItem) => (
+          <Option key={caetgoryItem} value={caetgoryItem}>
+            {caetgoryItem}
+          </Option>
+        ))}
+      </Select>
+      <br></br>
+      <div>Budget</div>
+      <Input type="number" defaultValue="" onChange={onBudgetChange} />
       <Table
         columns={columns}
         dataSource={filteredTableData}
         pagination={false}
-        rowClassName="row-class"
-        summary={(pageData) => {
-          let totalBillValue = 0;
-          pageData.forEach((item) => {
-            totalBillValue += item.amount;
-          });
+        rowClassName={(record) => {
+          if (billsToPay.includes(record)) {
+            return "dark-grey";
+          } else {
+            return "";
+          }
+        }}
+        summary={() => {
+          const totalBillValue = billsData.reduce(function (a, b) {
+            return a + b.amount;
+          }, 0);
           return (
             <>
               <Table.Summary>
-                <Table.Summary.Row>
+                <Table.Summary.Row className="dark-grey">
                   <Table.Summary.Cell
                     colSpan={2}
-                    index={2}
+                    index={1}
                   ></Table.Summary.Cell>
-                  <Table.Summary.Cell index={1}>Balance</Table.Summary.Cell>
+                  <Table.Summary.Cell index={2}>Total</Table.Summary.Cell>
                   <Table.Summary.Cell index={3}>
                     {totalBillValue}
                   </Table.Summary.Cell>
+                  <Table.Summary.Cell
+                    colSpan={1}
+                    index={4}
+                  ></Table.Summary.Cell>
                 </Table.Summary.Row>
               </Table.Summary>
             </>

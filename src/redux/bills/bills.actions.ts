@@ -30,3 +30,12 @@ export const deleteBill: ActionCreator<Action> = (billId: string | number) => {
     },
   };
 };
+
+export const budgetUpdated = (budget: number) => {
+  return {
+    type: BillsTypes.BUDGET_UPDATED,
+    data: {
+      budget,
+    },
+  };
+};

@@ -3,4 +3,5 @@ export const BillsTypes = {
   ADD_NEW_BILL: "ADD_NEW_BILL",
   EDIT_BILL: "EDIT_BILL",
   DELETE_BILL: "DELETE_BILL",
+  BUDGET_UPDATED: "BUDGET_UPDATED",
 };

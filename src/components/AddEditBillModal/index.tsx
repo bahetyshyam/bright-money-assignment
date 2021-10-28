@@ -3,7 +3,7 @@ import { Modal, Form, Input, DatePicker, Select, Button } from "antd";
 import moment from "moment";
 import { ModalActionType } from "../BillsTable";
 import { v4 as uuidv4 } from "uuid";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { addBill, editBill } from "../../redux/bills/bills.actions";
 const { Option } = Select;
 
@@ -22,7 +22,7 @@ const AddEditBillModal: React.FunctionComponent<IProps> = ({
   setCurrentActionBillData,
 }) => {
   const [dateValue, setDateValue] = useState<moment.Moment | null>(
-    billData && billData.date ? moment(billData?.date, "DD-MM-YYYY") : moment()
+    billData && billData.date ? moment(billData?.date) : moment()
   );
   const [descriptionValue, setDescriptionValue] = useState<string>(
     billData?.description || ""
@@ -33,6 +33,7 @@ const AddEditBillModal: React.FunctionComponent<IProps> = ({
   const [amountValue, setAmountValue] = useState<string>(
     billData?.amount.toString() || ""
   );
+  const categories = useAppSelector((state) => state.categoriesReducer);
   const reduxDispatch = useAppDispatch();
 
   function onDateChange(date: moment.Moment | null) {
@@ -67,7 +68,7 @@ const AddEditBillModal: React.FunctionComponent<IProps> = ({
         reduxDispatch(
           addBill({
             id: uuidv4(),
-            date: moment(dateValue).format("DD-MM-YYYY"),
+            date: moment(dateValue).format("MM-DD-YYYY"),
             description: descriptionValue,
             category: categoryValue,
             amount: parseInt(amountValue),
@@ -77,7 +78,7 @@ const AddEditBillModal: React.FunctionComponent<IProps> = ({
         reduxDispatch(
           editBill({
             id: billData?.id!,
-            date: moment(dateValue).format("DD-MM-YYYY"),
+            date: moment(dateValue).format("MM-DD-YYYY"),
             description: descriptionValue,
             category: categoryValue,
             amount: parseInt(amountValue),
@@ -106,12 +107,10 @@ const AddEditBillModal: React.FunctionComponent<IProps> = ({
           <DatePicker
             onChange={onDateChange}
             defaultValue={
-              billData && billData.date
-                ? moment(billData?.date, "DD-MM-YYYY")
-                : moment()
+              billData && billData.date ? moment(billData?.date) : moment()
             }
             value={dateValue}
-            format="DD-MM-YYYY"
+            format="MM-DD-YYYY"
           />
         </Form.Item>
         <Form.Item
@@ -135,13 +134,11 @@ const AddEditBillModal: React.FunctionComponent<IProps> = ({
             value={categoryValue}
             onChange={handleCategoryChange}
           >
-            <Option value="FoodNDining">FoodNDining</Option>
-            <Option value="utility">utility</Option>
-            <Option value="shopping">shopping</Option>
-            <Option value="Food & Dining">Food & Dining</Option>
-            <Option value="education">education</Option>
-            <Option value="Personal Care">Personal Care</Option>
-            <Option value="Travel">Travel</Option>
+            {categories.map((categoryItem, index) => (
+              <Option key={index} value={categoryItem}>
+                {categoryItem}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item name="amount" label="Amount" rules={[{ required: true }]}>

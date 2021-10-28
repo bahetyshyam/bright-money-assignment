@@ -1,6 +1,6 @@
 interface BillsState {
-  bills: Bill[];
-  categories: string[];
+  activeBills: Bill[];
+  billsToPay: Bill[];
 }
 
 interface Bill {
