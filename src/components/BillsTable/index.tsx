@@ -42,6 +42,20 @@ const BillsTable = () => {
     setIsModalVisible(true);
   };
 
+  const onChangeFilterSelect = (filterList: any) => {
+    setFilterList(filterList);
+  };
+  const onBudgetChange = (
+    ev: React.ChangeEvent<HTMLInputElement> | undefined
+  ) => {
+    if (ev) {
+      let budget = 0;
+      if (ev.target.value !== "") {
+        budget = parseInt(ev.target.value);
+      }
+      reduxDispatch(budgetUpdated(budget));
+    }
+  };
   const columns: ColumnsType<Bill> = [
     {
       title: "Date",
@@ -85,25 +99,11 @@ const BillsTable = () => {
     },
   ];
 
-  const onChangeFilterSelect = (filterList: any) => {
-    setFilterList(filterList);
-  };
-  const onBudgetChange = (
-    ev: React.ChangeEvent<HTMLInputElement> | undefined
-  ) => {
-    if (ev) {
-      let budget = 0;
-      if (ev.target.value !== "") {
-        budget = parseInt(ev.target.value);
-      }
-      reduxDispatch(budgetUpdated(budget));
-    }
-  };
-
   const filteredTableData =
     filterList.length === 0
       ? billsData
       : billsData.filter((billItem) => filterList.includes(billItem.category));
+
   return (
     <>
       <Button

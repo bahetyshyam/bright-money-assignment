@@ -21,6 +21,8 @@ const AddEditBillModal: React.FunctionComponent<IProps> = ({
   billData,
   setCurrentActionBillData,
 }) => {
+  const categories = useAppSelector((state) => state.categoriesReducer);
+  const reduxDispatch = useAppDispatch();
   const [dateValue, setDateValue] = useState<moment.Moment | null>(
     billData && billData.date ? moment(billData?.date) : moment()
   );
@@ -28,13 +30,11 @@ const AddEditBillModal: React.FunctionComponent<IProps> = ({
     billData?.description || ""
   );
   const [categoryValue, setCategoryValue] = useState<string>(
-    billData?.category || "FoodNDining"
+    billData?.category || categories[0]
   );
   const [amountValue, setAmountValue] = useState<string>(
     billData?.amount.toString() || ""
   );
-  const categories = useAppSelector((state) => state.categoriesReducer);
-  const reduxDispatch = useAppDispatch();
 
   function onDateChange(date: moment.Moment | null) {
     setDateValue(date);

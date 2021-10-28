@@ -14,6 +14,10 @@ import { useAppSelector } from "../../redux/hooks";
 
 const TimeSeriesChart = () => {
   const billData = useAppSelector((state) => state.billsReducer.activeBills);
+
+  //This memoObject stores the key value pair of date vs amount that date.
+  //This is because a single date might have many bills, hence we need to add them.
+  //The logic below loops through the bills and finds out the total amount/date.
   const memoObject: { [key: string]: number } = {};
   billData.forEach((billItem) => {
     console.log(billItem);
@@ -23,6 +27,7 @@ const TimeSeriesChart = () => {
       memoObject[billItem.date] = billItem.amount;
     }
   });
+
   const sortedData = Object.keys(memoObject)
     .map((objectkey) => ({ date: objectkey, amount: memoObject[objectkey] }))
     .sort((a, b) => moment(a.date).unix() - moment(b.date).unix());

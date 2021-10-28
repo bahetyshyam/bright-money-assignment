@@ -45,15 +45,18 @@ export const billsReducer = (state = INITIAL_STATE, action: any) => {
           billsToPay: [],
         };
       } else {
+        //Sort the bills in descending order.
         const sortedActiveBills = state.activeBills.sort(
           (a, b) => b.amount - a.amount
         );
         let budgetUsed = 0;
         let tempBillsToPay: Bill[] = [];
         sortedActiveBills.forEach((billItem) => {
+          //If the bill amount cannot be accomodated into the budget
           if (billItem.amount + budgetUsed > action.data.budget) {
             //do nothing
           } else {
+            //If the bill amount can be accomodated into the budget, add it.
             budgetUsed = budgetUsed + billItem.amount;
             tempBillsToPay.push(billItem);
           }
