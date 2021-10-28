@@ -97,13 +97,19 @@ const AddEditBillModal: React.FunctionComponent<IProps> = ({
 
   return (
     <Modal
-      title="Basic Modal"
+      title={
+        modalActionType === ModalActionType.Add ? "Add new bill" : "Edit bill"
+      }
       visible={true}
       onCancel={handleCancel}
       footer={false}
     >
       <Form labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
-        <Form.Item name="Date" label="Date" rules={[{ required: true }]}>
+        <Form.Item
+          name="Date"
+          label="Date"
+          rules={[{ required: true, message: "Date is required" }]}
+        >
           <DatePicker
             onChange={onDateChange}
             defaultValue={
@@ -116,7 +122,7 @@ const AddEditBillModal: React.FunctionComponent<IProps> = ({
         <Form.Item
           name="Description"
           label="Description"
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: "Description is required" }]}
         >
           <Input
             defaultValue={descriptionValue}
@@ -127,7 +133,7 @@ const AddEditBillModal: React.FunctionComponent<IProps> = ({
         <Form.Item
           name="Category"
           label="Category"
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: "Category is required" }]}
         >
           <Select
             defaultValue={categoryValue}
@@ -141,7 +147,11 @@ const AddEditBillModal: React.FunctionComponent<IProps> = ({
             ))}
           </Select>
         </Form.Item>
-        <Form.Item name="amount" label="Amount" rules={[{ required: true }]}>
+        <Form.Item
+          name="amount"
+          label="Amount"
+          rules={[{ required: true, message: "Amount is required" }]}
+        >
           <Input
             defaultValue={amountValue}
             value={amountValue}

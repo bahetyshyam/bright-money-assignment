@@ -1,6 +1,7 @@
 interface BillsState {
   activeBills: Bill[];
   billsToPay: Bill[];
+  budget: number;
 }
 
 interface Bill {

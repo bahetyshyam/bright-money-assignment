@@ -14,12 +14,20 @@ import { useAppSelector } from "../../redux/hooks";
 
 const TimeSeriesChart = () => {
   const billData = useAppSelector((state) => state.billsReducer.activeBills);
-  const sortedData = billData.sort(
-    (a, b) => moment(a.date).unix() - moment(b.date).unix()
-  );
-  console.log("Sorted Data", sortedData);
+  const memoObject: { [key: string]: number } = {};
+  billData.forEach((billItem) => {
+    console.log(billItem);
+    if (billItem.date in memoObject) {
+      memoObject[billItem.date] = memoObject[billItem.date] + billItem.amount;
+    } else {
+      memoObject[billItem.date] = billItem.amount;
+    }
+  });
+  const sortedData = Object.keys(memoObject)
+    .map((objectkey) => ({ date: objectkey, amount: memoObject[objectkey] }))
+    .sort((a, b) => moment(a.date).unix() - moment(b.date).unix());
   return (
-    <div style={{ width: "100%", height: 500 }}>
+    <div style={{ width: "100%", height: 500, marginTop: 100 }}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={sortedData}
@@ -35,7 +43,7 @@ const TimeSeriesChart = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="amount" fill="#8884d8" />
+          <Bar name="Amount" dataKey="amount" fill="#1890FF" />
         </BarChart>
       </ResponsiveContainer>
     </div>

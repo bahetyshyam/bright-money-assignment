@@ -1,4 +1,4 @@
-import { Table, Space, Button, Select, Input } from "antd";
+import { Table, Space, Button, Select, Input, Popconfirm } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import { budgetUpdated, deleteBill } from "../../redux/bills/bills.actions";
@@ -69,11 +69,19 @@ const BillsTable = () => {
       render: (text, record) => (
         <Space size="middle">
           <Button onClick={() => handleEdit(record)}>Edit</Button>
-          <Button danger onClick={() => handleDelete(record.id)}>
-            Delete
-          </Button>
+          <Popconfirm
+            title="Are you sure you want to delete?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary" danger>
+              Delete
+            </Button>
+          </Popconfirm>
         </Space>
       ),
+      width: "200px",
     },
   ];
 
@@ -98,29 +106,45 @@ const BillsTable = () => {
       : billsData.filter((billItem) => filterList.includes(billItem.category));
   return (
     <>
-      <Button onClick={handleAdd} style={{ marginBottom: 10 }} type="primary">
+      <Button
+        onClick={handleAdd}
+        style={{ marginBottom: 10 }}
+        type="primary"
+        size="large"
+      >
         Add New Bill
       </Button>
-      <br></br>
-      <div>Filter</div>
-      <Select
-        mode="multiple"
-        allowClear
-        style={{ width: "100%" }}
-        placeholder="Please select"
-        defaultValue={[]}
-        value={filterList}
-        onChange={onChangeFilterSelect}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: 5,
+        }}
       >
-        {categories.map((caetgoryItem) => (
-          <Option key={caetgoryItem} value={caetgoryItem}>
-            {caetgoryItem}
-          </Option>
-        ))}
-      </Select>
-      <br></br>
-      <div>Budget</div>
-      <Input type="number" defaultValue="" onChange={onBudgetChange} />
+        <div>
+          <b>Budget</b>
+          <Input type="number" defaultValue="" onChange={onBudgetChange} />
+        </div>
+        <div style={{ width: "30%" }}>
+          <b>Filter</b>
+          <Select
+            mode="multiple"
+            allowClear
+            style={{ width: "100%" }}
+            placeholder="Please select"
+            defaultValue={[]}
+            value={filterList}
+            onChange={onChangeFilterSelect}
+          >
+            {categories.map((caetgoryItem) => (
+              <Option key={caetgoryItem} value={caetgoryItem}>
+                {caetgoryItem}
+              </Option>
+            ))}
+          </Select>
+        </div>
+      </div>
+
       <Table
         columns={columns}
         dataSource={filteredTableData}
@@ -133,20 +157,25 @@ const BillsTable = () => {
           }
         }}
         summary={() => {
-          const totalBillValue = billsData.reduce(function (a, b) {
+          const totalBillValue = (billsData as any).reduce(function (
+            a: any,
+            b: any
+          ) {
             return a + b.amount;
-          }, 0);
+          },
+          0);
           return (
             <>
               <Table.Summary>
                 <Table.Summary.Row className="dark-grey">
-                  <Table.Summary.Cell
-                    colSpan={2}
-                    index={1}
-                  ></Table.Summary.Cell>
-                  <Table.Summary.Cell index={2}>Total</Table.Summary.Cell>
+                  <Table.Summary.Cell colSpan={2} index={1}>
+                    <b>Mininum bills to be paid : {billsToPay.length}</b>
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={2}>
+                    <b>Total</b>
+                  </Table.Summary.Cell>
                   <Table.Summary.Cell index={3}>
-                    {totalBillValue}
+                    <b>{totalBillValue}</b>
                   </Table.Summary.Cell>
                   <Table.Summary.Cell
                     colSpan={1}

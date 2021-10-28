@@ -1,35 +1,49 @@
-import { Action, ActionCreator } from "redux";
+import { AnyAction } from "redux";
+import { ThunkAction } from "redux-thunk";
+import { RootState } from "../store";
 import { BillsTypes } from "./bills.constants";
 
-export const appendBills: ActionCreator<Action> = (data: Bill[]) => {
-  return {
-    type: BillsTypes.APPEND_BILLS,
-    data,
+export const appendBills =
+  (data: Bill[]): ThunkAction<void, RootState, unknown, AnyAction> =>
+  (dispatch, getState) => {
+    dispatch({
+      type: BillsTypes.APPEND_BILLS,
+      data,
+    });
+    dispatch(budgetUpdated(getState().billsReducer.budget));
   };
-};
 
-export const addBill = (data: Bill) => {
-  return {
-    type: BillsTypes.ADD_NEW_BILL,
-    data,
+export const addBill =
+  (data: Bill): ThunkAction<void, RootState, unknown, AnyAction> =>
+  (dispatch, getState) => {
+    dispatch({
+      type: BillsTypes.ADD_NEW_BILL,
+      data,
+    });
+    dispatch(budgetUpdated(getState().billsReducer.budget));
   };
-};
 
-export const editBill = (data: Bill) => {
-  return {
-    type: BillsTypes.EDIT_BILL,
-    data,
+export const editBill =
+  (data: Bill): ThunkAction<void, RootState, unknown, AnyAction> =>
+  (dispatch, getState) => {
+    dispatch({
+      type: BillsTypes.EDIT_BILL,
+      data,
+    });
+    dispatch(budgetUpdated(getState().billsReducer.budget));
   };
-};
 
-export const deleteBill: ActionCreator<Action> = (billId: string | number) => {
-  return {
-    type: BillsTypes.DELETE_BILL,
-    data: {
-      billId,
-    },
+export const deleteBill =
+  (billId: string | number): ThunkAction<void, RootState, unknown, AnyAction> =>
+  (dispatch, getState) => {
+    dispatch({
+      type: BillsTypes.DELETE_BILL,
+      data: {
+        billId,
+      },
+    });
+    dispatch(budgetUpdated(getState().billsReducer.budget));
   };
-};
 
 export const budgetUpdated = (budget: number) => {
   return {

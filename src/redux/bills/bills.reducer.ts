@@ -3,6 +3,7 @@ import { BillsTypes } from "./bills.constants";
 const INITIAL_STATE: BillsState = {
   activeBills: [],
   billsToPay: [],
+  budget: 0,
 };
 
 export const billsReducer = (state = INITIAL_STATE, action: any) => {
@@ -36,9 +37,11 @@ export const billsReducer = (state = INITIAL_STATE, action: any) => {
         activeBills: filteredArray,
       };
     case BillsTypes.BUDGET_UPDATED:
+      console.log(action.data.budget);
       if (action.data.budget === 0) {
         return {
           ...state,
+          budget: action.data.budget,
           billsToPay: [],
         };
       } else {
@@ -58,6 +61,7 @@ export const billsReducer = (state = INITIAL_STATE, action: any) => {
         return {
           ...state,
           billsToPay: tempBillsToPay,
+          budget: action.data.budget,
         };
       }
     default:

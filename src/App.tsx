@@ -9,7 +9,9 @@ function App() {
     <div>
       <Layout className="layout">
         <Header>
-          <div style={{ color: "white" }}>Bright Money Bill Manager</div>
+          <div style={{ color: "white", fontSize: 24 }}>
+            Bright Money Bill Manager
+          </div>
         </Header>
         <Content style={{ padding: "50px" }}>
           <div className="site-layout-content">
